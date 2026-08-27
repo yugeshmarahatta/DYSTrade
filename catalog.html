@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse the full DYS Trade catalog of plastics, cosmetics, household essentials, and everyday wholesale and retail products in Nepal.">
+  <meta name="theme-color" content="#173f3a">
+  <title>DYS Trade | All products</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="catalog.css">
+</head>
+<body class="catalog-page">
+  <header class="site-header"><div class="container nav-wrap"><a class="brand" href="index.html" aria-label="DYS Trade home"><img src="assets/dys-logo.png" alt="DYS Trade logo"><span>DYS <strong>Trade</strong></span></a><nav class="main-nav" aria-label="Primary navigation"><a href="index.html#catalog">Catalog</a><a href="index.html#about">About us</a><a href="index.html#contact">Contact</a></nav><a class="nav-cta" href="index.html#catalog">Browse products <span aria-hidden="true">↗</span></a></div></header>
+  <main id="top">
+    <section class="catalog-section container" id="catalog"><div class="section-heading"><div><p class="eyebrow"><span></span> What we carry</p><h2>Browse all<br><em>products.</em></h2></div><p class="section-blurb">Every item from the DYS Trade range in one place. Search, filter, and sort your way around.</p></div><div class="catalog-tools"><div class="filter-tabs" role="group" aria-label="Filter products"><button class="filter active" data-category="all">All products</button><button class="filter" data-category="Plastics">Plastics</button><button class="filter" data-category="Cosmetics">Cosmetics</button><button class="filter" data-category="Household">Household</button><button class="filter" data-category="Other">Other</button></div><label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search products" aria-label="Search products"></label></div><div class="advanced-tools"><div class="price-group"><span class="filter-label">Price (NPR)</span><input id="price-min" type="number" min="0" step="0.01" placeholder="Min"><input id="price-max" type="number" min="0" step="0.01" placeholder="Max"></div><label>Availability<select id="availability"><option value="all">All</option><option value="Wholesale & retail">Wholesale &amp; retail</option><option value="Ask for availability">Ask for availability</option></select></label><label>Sort by<select id="sort"><option value="newest">Newest first</option><option value="name-az">Name A&ndash;Z</option><option value="name-za">Name Z&ndash;A</option><option value="price-asc">Price: Low to high</option><option value="price-desc">Price: High to low</option></select></label><button class="button button-outline reset-btn" id="reset-filters" type="button">Reset filters <span aria-hidden="true">↗</span></button></div><p class="results-summary" id="results-summary" aria-live="polite"></p><div class="product-grid" id="product-grid"></div><p class="empty-state" id="empty-state" hidden>No products match those filters. Try widening your search.</p><nav class="pagination" id="pagination" aria-label="Pagination"></nav></section>
+  </main>
+  <footer class="site-footer"><div class="container footer-wrap"><a class="brand footer-brand" href="#top"><img src="assets/dys-logo.png" alt=""><span>DYS <strong>Trade</strong></span></a><p>Everyday goods, supplied simply.</p><div class="social-links" aria-label="Social media links"><a href="#" aria-label="Facebook">f</a><a href="#" aria-label="Instagram">◎</a><a href="#" aria-label="TikTok">♪</a></div><p>© <span id="year"></span> DYS Trade · Nepal</p></div></footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="catalog.js"></script>
+</body>
+</html>

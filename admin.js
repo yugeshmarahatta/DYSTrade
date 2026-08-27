@@ -162,9 +162,17 @@ productForm.addEventListener("submit", async (event) => {
 
 document.querySelector("#cancel-edit").addEventListener("click", resetForm);
 imageInput.addEventListener("change", () => {
-  const file = imageInput.files[0];
-  if (!file) return;
-  imagePreview.innerHTML = `<img src="${URL.createObjectURL(file)}" alt="Selected product image">`;
+  imagePreview.querySelectorAll("img").forEach((img) => URL.revokeObjectURL(img.dataset.url));
+  imagePreview.innerHTML = "";
+  const files = [...imageInput.files];
+  if (!files.length) {
+    imagePreview.hidden = true;
+    return;
+  }
+  imagePreview.innerHTML = files.map((file) => {
+    const url = URL.createObjectURL(file);
+    return `<img src="${url}" data-url="${url}" alt="${file.name}">`;
+  }).join("");
   imagePreview.hidden = false;
 });
 document.querySelector("#sign-out").addEventListener("click", async () => { await client.auth.signOut(); dashboard.hidden = true; loginPanel.hidden = false; resetForm(); });

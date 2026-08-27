@@ -14,6 +14,7 @@ const grid = document.querySelector("#product-grid");
 const emptyState = document.querySelector("#empty-state");
 const search = document.querySelector("#search");
 let activeCategory = "all";
+let showAllOnHome = false;
 
 function renderProducts() {
   const query = search.value.trim().toLowerCase();
@@ -23,7 +24,10 @@ function renderProducts() {
     return matchesCategory && matchesSearch;
   });
 
-  grid.innerHTML = visibleProducts.map((product) => `
+  const showingAll = showAllOnHome || activeCategory !== "all" || query;
+  const displayProducts = showingAll ? visibleProducts : visibleProducts.slice(0, 6);
+
+  grid.innerHTML = displayProducts.map((product) => `
     <article class="product-card">
       <a class="product-image" href="product.html?id=${product.id || ""}&name=${encodeURIComponent(product.name)}" aria-label="View ${product.name} details">${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" loading="lazy">` : `<span aria-hidden="true">${product.icon}</span>`}</a>
       <span class="product-category">${product.category}</span>
@@ -33,6 +37,8 @@ function renderProducts() {
     </article>`).join("");
 
   emptyState.hidden = visibleProducts.length > 0;
+  const viewAll = document.querySelector("#view-all");
+  if (viewAll) viewAll.hidden = !(visibleProducts.length > 6 && !showingAll);
   grid.querySelectorAll(".quote-button").forEach((button) => {
     button.addEventListener("click", () => {
       const subject = encodeURIComponent(`Enquiry about ${button.dataset.product}`);
@@ -59,7 +65,7 @@ async function loadPublishedProducts() {
   }
 }
 
-search.addEventListener("input", renderProducts);
 document.querySelector("#year").textContent = new Date().getFullYear();
+search.addEventListener("input", renderProducts);
 renderProducts();
 loadPublishedProducts();
