@@ -8,6 +8,8 @@ const products = [
   { name: "Daily essentials", category: "Household", description: "Useful goods for shops and households.", icon: "＋", unit: "Ask for availability" }
 ];
 
+const supabaseConfigured = Boolean(window.DYS_SUPABASE_CONFIG?.url);
+let catalogProducts = supabaseConfigured ? [] : products;
 const grid = document.querySelector("#product-grid");
 const emptyState = document.querySelector("#empty-state");
 const search = document.querySelector("#search");
@@ -15,7 +17,7 @@ let activeCategory = "all";
 
 function renderProducts() {
   const query = search.value.trim().toLowerCase();
-  const visibleProducts = products.filter((product) => {
+  const visibleProducts = catalogProducts.filter((product) => {
     const matchesCategory = activeCategory === "all" || product.category === activeCategory;
     const matchesSearch = `${product.name} ${product.category} ${product.description}`.toLowerCase().includes(query);
     return matchesCategory && matchesSearch;
@@ -23,11 +25,11 @@ function renderProducts() {
 
   grid.innerHTML = visibleProducts.map((product) => `
     <article class="product-card">
-      <div class="product-image" aria-hidden="true">${product.icon}</div>
+      <a class="product-image" href="product.html?id=${product.id || ""}&name=${encodeURIComponent(product.name)}" aria-label="View ${product.name} details">${product.image_url ? `<img src="${product.image_url}" alt="${product.name}" loading="lazy">` : `<span aria-hidden="true">${product.icon}</span>`}</a>
       <span class="product-category">${product.category}</span>
-      <h3>${product.name}</h3>
+      <h3><a class="product-title-link" href="product.html?id=${product.id || ""}&name=${encodeURIComponent(product.name)}">${product.name}</a></h3>
       <p>${product.description}</p>
-      <div class="product-meta"><small>${product.unit}</small><button class="quote-button" data-product="${product.name}">Enquire <span aria-hidden="true">↗</span></button></div>
+      <div class="product-meta"><small>${product.price != null ? `NPR ${Number(product.price).toLocaleString()}` : product.unit}${product.quantity != null ? ` · ${product.quantity} ${product.quantity_unit || "piece"}` : ""}</small><button class="quote-button" data-product="${product.name}">Enquire <span aria-hidden="true">↗</span></button></div>
     </article>`).join("");
 
   emptyState.hidden = visibleProducts.length > 0;
@@ -47,6 +49,17 @@ document.querySelectorAll(".filter").forEach((button) => {
     renderProducts();
   });
 });
+async function loadPublishedProducts() {
+  if (!window.DYS_SUPABASE_CONFIG?.url || !window.supabase) return;
+  const client = window.supabase.createClient(window.DYS_SUPABASE_CONFIG.url, window.DYS_SUPABASE_CONFIG.anonKey);
+  const { data, error } = await client.from("products").select("id,name,category,description,icon,unit,image_url,price,quantity,quantity_unit").eq("is_active", true).order("created_at", { ascending: false });
+  if (!error && data) {
+    catalogProducts = data;
+    renderProducts();
+  }
+}
+
 search.addEventListener("input", renderProducts);
 document.querySelector("#year").textContent = new Date().getFullYear();
 renderProducts();
+loadPublishedProducts();
